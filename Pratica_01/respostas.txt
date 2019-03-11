@@ -1,0 +1,5 @@
+1. C:\Program Files\Java\jdk1.8.0_162
+2. C:\Program Files\Java\jdk1.8.0_162\bin
+3. javac nome_classe.java Saída: nome_classe.nome_class
+4. java nome_classe
+5. São valores dinâmicos que pode afetar o modo como os processos em execução irão se comportar em um computador. Elas são parte do ambiente no qual um processo executa
