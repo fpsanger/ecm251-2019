@@ -1,0 +1,35 @@
+    String newpassword = newpass.getText();
+                    conn = DriverManager.getConnection("jdbc:odbc:patientsystem");
+                    String passw   = "UPDATE Guest SET password='"+newpassword+"' WHERE password='"+passcheck+"' ";
+                    s = conn.prepareStatement(passw);
+                    s.setString(1,newpassword );
+
+                    s.execute();
+
+                    JOptionPane.showMessageDialog(null, "Password changed");
+
+                    rs.close();
+                    s.close();
+
+                } catch (Exception es) {
+                    JOptionPane.showMessageDialog(null, es.getMessage());
+                }
+
+0
+
+Probably you have to do 2 different queries:
+
+1) Check the old password with a SELECT
+
+2) Then if the old_password_input fit with the password in the db save the ID of the user.
+
+3) Update the password where idFound = id_in_the_db
+
+SELECT guest.id
+FROM guest
+where guest.password = checkpassword AND guest.username = username
+You have to check the username too. The only password its not enough. Now you have the guest.id
+
+So you can do this:
+
+UPDATE Guest SET password = newpassword' WHERE guest.id = idFound 
