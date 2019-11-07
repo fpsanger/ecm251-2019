@@ -71,7 +71,11 @@ public class MainActivity extends AppCompatActivity {
                                     "\n" +
                                     "Pressure: " +
                                     weatherResponse.main.pressure +
+                                    "\n" +
+                                    "Humidty: " +
+                                    weatherResponse.main.humidity +
                                     "\n";
+
 
                             resposta.setText(stringBuilder);
                         }else{
