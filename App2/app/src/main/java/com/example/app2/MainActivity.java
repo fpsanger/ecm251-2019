@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.app2.retrofit.RetrofitConfig;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -21,8 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public static String AppId = "9ee8551f3d7728960c4b9b8be191e7e4";
-    public static String lat = "35";
-    public static String lon = "139";
+
 
 
 
@@ -33,23 +34,29 @@ public class MainActivity extends AppCompatActivity {
 
        final EditText cityName = findViewById(R.id.cityName);
        final TextView resposta = findViewById(R.id.cityNameResposta2);
-       Button btnBuscarCep = findViewById(R.id.btnBuscaWeather);
+       final EditText editTextLat = findViewById(R.id.editTextLat);
+       final EditText editTextLon = findViewById(R.id.editTextLon);
+       Button btnBuscarWeather = findViewById(R.id.btnBuscaWeather);
 
 
-        btnBuscarCep.setOnClickListener(new View.OnClickListener() {
+
+
+
+        btnBuscarWeather.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl("http://api.openweathermap.org/")
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
-                WeatherService service = retrofit.create(WeatherService.class);
-                Call<WeatherResult> call = service.getWeather(lat, lon, AppId);
+                WeatherPorNome();
+            }
+
+
+    private void WeatherPorNome() {
+
+                Call<WeatherResult> call = new RetrofitConfig().getWeatherService().getWeatherName(cityName.getText().toString(),AppId);
                 call.enqueue(new Callback<WeatherResult>() {
                     @Override
                     public void onResponse(@NonNull Call<WeatherResult> call,
                                            @NonNull Response<WeatherResult> response) {
-                        if (response.code() == 200) {
+                        if (response.code() == 200 && cityName.getText().toString() != ("")) {
                             WeatherResult weatherResponse = response.body();
                             assert weatherResponse != null;
 
@@ -57,10 +64,21 @@ public class MainActivity extends AppCompatActivity {
                                     weatherResponse.sys.country +
                                     "\n" +
                                     "Temperature: " +
-                                    weatherResponse.main +
-                                    "\n" ;
+                                    (weatherResponse.main.temp - 273.15) +
+                                    "\n"+
+                                    "Rain: " +
+                                    weatherResponse.rain.h3 +
+                                    "\n" +
+                                    "Pressure: " +
+                                    weatherResponse.main.pressure +
+                                    "\n";
 
                             resposta.setText(stringBuilder);
+                        }else{
+
+                            Toast.makeText(getApplicationContext(),"Digite uma cidade valida", Toast.LENGTH_SHORT).show();
+
+
                         }
                     }
 
@@ -73,11 +91,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
             }
+
         });
-
-
-
-
     }
 }
 
